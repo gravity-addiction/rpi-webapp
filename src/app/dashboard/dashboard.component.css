@@ -1,0 +1,3 @@
+.netIf:nth-child(odd), .disks .row:nth-child(odd), .memory .row:nth-child(odd) {
+  background-color: #ddd;
+}
