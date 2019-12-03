@@ -8,32 +8,6 @@
     </div>
 
     <div class="row">
-      <div class="col-md-4">
-        <div class="card card-chart">
-          <div class="card-header card-header-success">
-            OS
-          </div>
-          <div class="card-body table-responsive">
-            <table class="table table-hover">
-              <tbody *ngIf="(sysInfo.os$ | async) === null">
-                <tr><td colspan="14">
-                  <div class="d-flex justify-content-center" >
-                    <div class="spinner-grow" role="status">
-                      <span class="sr-only">Loading...</span>
-                    </div>
-                  </div>
-                </td></tr>
-              </tbody>              
-              <tbody *ngIf="(sysInfo.os$ | async) !== null">
-                <tr *ngFor="let os of (sysInfo.os$ | async)?.osInfo | keyvalue">
-                  <td>{{ os.key }}</td>
-                  <td>{{ os.value }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
 
       <div class="col-md-4">
         <div class="card card-chart">
@@ -65,6 +39,35 @@
           </div>
         </div>
       </div>  
+
+
+      <div class="col-md-4">
+        <div class="card card-chart">
+          <div class="card-header card-header-success">
+            OS
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover">
+              <tbody *ngIf="(sysInfo.os$ | async) === null">
+                <tr><td colspan="14">
+                  <div class="d-flex justify-content-center" >
+                    <div class="spinner-grow" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                </td></tr>
+              </tbody>              
+              <tbody *ngIf="(sysInfo.os$ | async) !== null">
+                <tr *ngFor="let os of (sysInfo.os$ | async)?.osInfo | keyvalue">
+                  <td>{{ os.key }}</td>
+                  <td>{{ os.value }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
 
       <div class="col-md-4">
         <div class="card card-chart">

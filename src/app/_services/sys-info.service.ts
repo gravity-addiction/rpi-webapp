@@ -38,7 +38,13 @@ export class SysInfoService {
     diskInfo: {
       init: false,
       url: '/sysinfo/disk',
-      sub: new BehaviorSubject<any>(null)
+      sub: new BehaviorSubject<any>(null),
+      post: (data) => {
+        console.log('Post', data);
+        data.totalDisk = 64;
+        data.totalUsed = 16;
+        return data;
+      }
     },
     processInfo: {
       init: false,
@@ -50,7 +56,7 @@ export class SysInfoService {
         (((data || {}).processes || {}).list || []).sort((a: any, b: any) => 
           (a[sortBy] > b[sortBy]) ? -1 : ((a[sortBy] < b[sortBy]) ? 1 : 0)
         );
-        this._sysCalls.processInfo.sub.next(data);
+        return data;
       }
     }
     
@@ -114,11 +120,17 @@ export class SysInfoService {
       // { headers: new HttpHeaders({ timeout: `${25000}` }) }
     ).
     subscribe(data => {
-      if (sysCall.hasOwnProperty('sort')) {
-        sysCall.sort(data);
-      } else {
-        sysCall.sub.next(data);
+      // Post Data manipulations
+      if (sysCall.hasOwnProperty('post')) {
+        data = sysCall.post(data);
       }
+
+      // Sorting Data
+      if (sysCall.hasOwnProperty('sort')) {
+        data = sysCall.sort(data);
+      }
+
+      sysCall.sub.next(data);
     });
   }
 }

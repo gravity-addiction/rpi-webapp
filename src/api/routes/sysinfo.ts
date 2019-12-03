@@ -72,10 +72,14 @@ router.get('/api/sysinfo/memory', (req: Request, res: Response) => {
 
 router.get('/api/sysinfo/disk', (req: Request, res: Response) => {
   Promise.all([
-    si.fsSize()
+    si.fsSize(),
+    si.diskLayout(),
+    si.blockDevices()
   ]).then(data => {
     res.status(200).json({
-      fsSize: data[0]
+      fsSize: data[0],
+      diskLayout: data[1],
+      blockDevices: data[2]
     });
   }).catch(error => console.error(error));
 });

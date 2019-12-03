@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as Chartist from 'chartist';
 import { Subscription, ObjectUnsubscribedError } from 'rxjs';
 
 import { SysInfoService } from '../_services/sys-info.service';
 import { CacheService } from '../_services/cache.service';
+import { share, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,6 +12,8 @@ import { CacheService } from '../_services/cache.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
+  @ViewChild('normTemp', { static: false }) normTemp: ElementRef;
+  @ViewChild('highTemp', { static: false }) highTemp: ElementRef;
   sysInfo: any = {};
   apiDevice$: Subscription;
 

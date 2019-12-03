@@ -19,7 +19,8 @@
             </div>
             <p class="card-category">Used Space</p>
             <h3 class="card-title">
-              <small>GB</small>
+              <span [innerHtml]="(sysInfo.disk$ | async)?.totalUsed | byteconvert:2"></span> /
+              <span [innerHtml]="(sysInfo.disk$ | async)?.totalDisk | byteconvert:2"></span>
             </h3>
           </div>
           <div class="d-flex justify-content-center" *ngIf="(sysInfo.disk$ | async) === null">
@@ -86,24 +87,25 @@
       <!-- Column 2 -->
       <div class="col-sm-6">
 
-        <!-- CPU -->
+        <!-- Temperature -->
         <div class="card card-stats">
           <div class="card-header card-header-primary card-header-icon">
             <div class="card-icon">
-              <i class="fas fa-cpu"></i>
+              <i class="fas" [ngClass]="(sysInfo.cpu$ | async)?.cpuTemperature?.main > 61 ? 'fa-temperature-high' : 'fa-temperature-low'"></i>
             </div>
-            <p class="card-category">CPU</p>
-            <h3 class="card-title" *ngIf="(sysInfo.cpu$ | async)?.cpuTemperature?.main > 0">
+            <p class="card-category">Temperature</p>
+            <h3 class="card-title">
               <small>Temp: </small>
-              {{ (sysInfo.cpu$ | async)?.cpuTemperature?.main | number:'0.2-2' }}
-              <small>Max: {{ (sysInfo.cpu$ | async)?.cpuTemperature?.max | number:'0.2-2' }}</small>
+              <span>
+                {{ (sysInfo.cpu$ | async)?.cpuTemperature?.main | number:'0.0-2' }}
+              </span>
             </h3>
           </div>
           <div class="card-body container-fluid p-3 cpu">
 
           </div>
         </div>
-        <!-- End CPU -->
+        <!-- End Temperature -->
 
 
         <!-- Memory -->
