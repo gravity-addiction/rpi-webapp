@@ -22,7 +22,12 @@
               <small>GB</small>
             </h3>
           </div>
-          <div class="card-body container-fluid p-3 disks">
+          <div class="d-flex justify-content-center" *ngIf="(sysInfo.disk$ | async) === null">
+            <div class="spinner-grow" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div class="card-body container-fluid p-3 disks" *ngIf="(sysInfo.disk$ | async) !== null">
             <div class="row" *ngFor="let fsDrive of (sysInfo.disk$ | async)?.fsSize">
               <div class="colcard-text text-left pl-4">
                 {{ fsDrive.mount || fsDrive.fs }}<i *ngIf="fsDrive.use > 74.99" class="material-icons text-danger pr-1 md-18s">warning</i>
@@ -47,7 +52,13 @@
               {{ (sysInfo.system$ | async)?.os?.hostname }}
             </h3>
           </div>
-          <div class="card-body container-fluid p-0">
+
+          <div class="d-flex justify-content-center" *ngIf="(sysInfo.network$ | async) === null">
+            <div class="spinner-grow" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          <div class="card-body container-fluid p-0" *ngIf="(sysInfo.disk$ | async) !== null">
             <div class="netIf" *ngFor="let netIf of (sysInfo.network$ | async)?.networkInterfaces">
               <div class="row">
                 <div class="col text-left pl-4 text-nowrap">
@@ -82,9 +93,10 @@
               <i class="fas fa-cpu"></i>
             </div>
             <p class="card-category">CPU</p>
-            <h3 class="card-title" *ngIf="(sysInfo.cpu$ | async)?.cpuTemperature?.main">
-              <span [innerHtml]="(sysInfo.cpu$ | async)?.cpuTemperature?.main | number:'0.2-2'"></span>
-              <span>Max: <span [innerHtml]="(sysInfo.cpu$ | async)?.cpuTemperature?.max | number:'0.2-2'"></span></span>
+            <h3 class="card-title" *ngIf="(sysInfo.cpu$ | async)?.cpuTemperature?.main > 0">
+              <small>Temp: </small>
+              {{ (sysInfo.cpu$ | async)?.cpuTemperature?.main | number:'0.2-2' }}
+              <small>Max: {{ (sysInfo.cpu$ | async)?.cpuTemperature?.max | number:'0.2-2' }}</small>
             </h3>
           </div>
           <div class="card-body container-fluid p-3 cpu">
@@ -105,7 +117,13 @@
               [innerHtml]="(sysInfo.memory$ | async)?.mem?.total | byteconvert:2">
             </h3>
           </div>
-          <div class="card-body container-fluid p-3 memory">
+
+          <div class="d-flex justify-content-center" *ngIf="(sysInfo.memory$ | async) === null">
+            <div class="spinner-grow" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>          
+          <div class="card-body container-fluid p-3 memory" *ngIf="(sysInfo.memory$ | async) !== null">
             <div class="row" *ngFor="let mem of (sysInfo.memory$ | async)?.mem | keyvalue">
               <div class="col-6 card-text text-left pl-4">{{ mem.key }}</div>
               <div class="col-6 card-text pr-4" [innerHtml]="mem.value | byteconvert:2"></div>

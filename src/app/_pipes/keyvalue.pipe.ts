@@ -8,7 +8,9 @@ export class KeyvaluePipe implements PipeTransform {
   transform(value: any, ...args: any[]): any {
     let keys = [];
     for (let key in value) {
-      keys.push({key: key, value: value[key]});
+      let val = value[key];
+      if (typeof val === 'object') { val = 'object'; }
+      keys.push({key: key, value: val});
     }
     return keys;
   }

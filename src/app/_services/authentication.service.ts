@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { CacheService } from './cache.service';
 import { StorageService } from './storage.service';
+
+import * as urljoin from 'url-join';
 
 
 @Injectable({
@@ -57,36 +59,46 @@ export class AuthenticationService {
     this._storage.setPersistantStorageLevel();
   }
 
-  login(username: string, password: string, captcha: string, rememberme: boolean = false, forwardTo: string = '/'): Observable<HttpResponse<any>> {
-    return this.http.post<any>(this.cacheService.settings.apiURL + 'authenticate', { username: username, password: password, rememberme: rememberme, recaptcha: captcha }, { observe: 'response' }).
-      pipe(
-        tap((resp) => {
+  login(username: string, password: string, rememberme: boolean = false, device = 'local', forwardTo: string = '/'): Observable<HttpResponse<any>> {
+    const apiUrl = (this.cacheService.apiUrls || []).find((a) => a.device === device);
+    if (!apiUrl) {
+      this.authFailed.next('No Host Defined For ' + device + ' in apiUrls Cache Service');
+      return of(null);
+    }
 
-          if (rememberme) {
-            this._storage.setPersistantStorageLevel(true);
-          } else {
-            this._storage.setPersistantStorageLevel(false);
-          }
+    return this.http.post<any>(
+        urljoin(apiUrl.url, 'authenticate'),
+        { username: username, password: password, rememberme: rememberme },
+        { observe: 'response' }
+    ).
+    pipe(
+      tap((resp) => {
 
-          if (this.userParseFunc) { this.userParseFunc(); }
-          this.authSource.next(true);
-          if (resp.status === 200) {
-            // Change Password
-            // this._location.replaceState('/changepassword?returnUrl=' + encodeURIComponent(forwardTo));
-            // (<any>window).location = '/changepassword?returnUrl=' + encodeURIComponent(forwardTo);
-            // this.router.navigateByUrl('/changepassword?returnUrl=' + encodeURIComponent(forwardTo));
-            this._location.replaceState(forwardTo);
+        if (rememberme) {
+          this._storage.setPersistantStorageLevel(true);
+        } else {
+          this._storage.setPersistantStorageLevel(false);
+        }
 
-          } else if (resp.status === 204 && forwardTo) {
-            // Previous Page
-            this._location.replaceState(forwardTo);
-            // (<any>window).location = forwardTo;
-            // this.router.navigateByUrl(forwardTo);
-          }
-        }, (err: any) => {
-          this.authFailed.next(err);
-        })
-      );
+        if (this.userParseFunc) { this.userParseFunc(); }
+        this.authSource.next(true);
+        if (resp.status === 200) {
+          // Change Password
+          // this._location.replaceState('/changepassword?returnUrl=' + encodeURIComponent(forwardTo));
+          // (<any>window).location = '/changepassword?returnUrl=' + encodeURIComponent(forwardTo);
+          // this.router.navigateByUrl('/changepassword?returnUrl=' + encodeURIComponent(forwardTo));
+          this._location.replaceState(forwardTo);
+
+        } else if (resp.status === 204 && forwardTo) {
+          // Previous Page
+          this._location.replaceState(forwardTo);
+          // (<any>window).location = forwardTo;
+          // this.router.navigateByUrl(forwardTo);
+        }
+      }, (err: any) => {
+        this.authFailed.next(err);
+      })
+    );
   }
 
   logout(forwardTo: (Array<any> | string) = '/'): void {
@@ -105,29 +117,9 @@ export class AuthenticationService {
     */
   }
 
-  loginSocialMedia(userInfo: any, forwardTo: string = '/') {
-    return this.http.post<any>(this.cacheService.settings.apiURL + 'authenticate', userInfo, { observe: 'response' }).
-      pipe(
-        tap((resp) => {
-          this.authSource.next(true);
-          if (resp.status === 204 && forwardTo) {
-            // Previous Page
-            (<any>window).location = forwardTo;
-          }
-        }, (err: any) => {
-          this.authFailed.next(err);
-        })
-      );
-  }
-
-  deleteLogout(cb: any) {
-    this.deleteAuthSubscription = this.http.delete<any>(this.cacheService.settings.apiURL + 'authenticate').subscribe(() => {
-      this.delAuthToken();
-      cb();
-    }, () => {
-      this.delAuthToken();
-      cb();
-    });
+  deleteLogout(cb: any, host = 'local') {
+    this.delAuthToken();
+    cb();
   }
 
 }

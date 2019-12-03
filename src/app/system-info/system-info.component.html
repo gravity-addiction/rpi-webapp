@@ -15,7 +15,16 @@
           </div>
           <div class="card-body table-responsive">
             <table class="table table-hover">
-              <tbody>
+              <tbody *ngIf="(sysInfo.os$ | async) === null">
+                <tr><td colspan="14">
+                  <div class="d-flex justify-content-center" >
+                    <div class="spinner-grow" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                </td></tr>
+              </tbody>              
+              <tbody *ngIf="(sysInfo.os$ | async) !== null">
                 <tr *ngFor="let os of (sysInfo.os$ | async)?.osInfo | keyvalue">
                   <td>{{ os.key }}</td>
                   <td>{{ os.value }}</td>
@@ -33,10 +42,23 @@
           </div>
           <div class="card-body table-responsive">
             <table class="table table-hover">
-              <tbody>
+              <tbody *ngIf="(sysInfo.static$ | async) === null">
+                <tr><td colspan="14">
+                  <div class="d-flex justify-content-center" >
+                    <div class="spinner-grow" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                </td></tr>
+              </tbody>              
+              <tbody *ngIf="(sysInfo.static$ | async) !== null">
                 <tr *ngFor="let cpu of (sysInfo.static$ | async)?.cpu | keyvalue">
                   <td>{{ cpu.key }}</td>
                   <td>{{ cpu.value }}</td>
+                </tr>
+                <tr>
+                  <td>flags</td>
+                  <td>{{ (sysInfo.static$ | async)?.cpuFlags }}</td>
                 </tr>
               </tbody>
             </table>
@@ -51,7 +73,16 @@
           </div>
           <div class="card-body table-responsive">
             <table class="table table-hover">
-              <tbody>
+              <tbody *ngIf="(sysInfo.os$ | async) === null">
+                <tr><td colspan="14">
+                  <div class="d-flex justify-content-center" >
+                    <div class="spinner-grow" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                </td></tr>
+              </tbody>              
+              <tbody *ngIf="(sysInfo.os$ | async) !== null">
                 <tr *ngFor="let version of (sysInfo.os$ | async)?.version | keyvalue">
                   <td>{{ version.key }}</td>
                   <td>{{ version.value }}</td>

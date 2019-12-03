@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { CacheService } from './cache.service';
 import * as urljoin from 'url-join';
 
@@ -56,15 +56,25 @@ export class SysInfoService {
     
   };
 
+  private apiDevice$: Subscription;
+
   constructor(
     private _http: HttpClient,
     private _cacheService: CacheService
-  ) { }
+  ) {
+    this.apiDevice$ = this._cacheService.apiDevice$.subscribe(() => {
+      const sysKeys = Object.keys(this._sysCalls),
+            sysI = sysKeys.length;
 
+      for (let i = 0; i < sysI; i++) {
+        this._sysCalls[sysKeys[i]].sub.next(null);
+        this._sysCalls[sysKeys[i]].init = false;
+      }
+    });
+  }
 
-  public getSysCall(syscall, host = 'local') {
+  public getSysCall(syscall) {
     if (!this._sysCalls.hasOwnProperty(syscall)) { return of(null); }
-    if (!this._sysCalls[syscall].init) { this.refreshSysCall(syscall, host); }
     return this._sysCalls[syscall].sub;
   }
 
@@ -76,16 +86,31 @@ export class SysInfoService {
     }
   }
 
-  public refreshSysCall(syscall, host = 'local') {
-    if (!this._cacheService.apiUrl.hasOwnProperty(host)) {
-      console.log('No Host Defined For', host, 'in apiUrls Cache Service');
+  public refreshSysCall(syscall, force = false) {
+    const apiUrl = (this._cacheService.apiUrls || []).find((a) => a.device === this._cacheService.apiDevice);
+    if (!apiUrl) {
+      console.log('No Device Defined For', this._cacheService.apiDevice, 'in apiUrls Cache Service');
       return;
     }
     const sysCall = this._sysCalls[syscall];
+    if (!sysCall) {
+      console.log('No System Call', syscall);
+      return;
+    }
+
+    // don't reup if initilized, unless forced
+    if (sysCall.init && !force) { return; }
+    // Clean subject initialized and forced
+    if (sysCall.init && force) { sysCall.sub.next(null); }
+
     sysCall.init = true;
 
-    this._http.get(
-      urljoin(this._cacheService.apiUrl[host], sysCall.url),
+    // kill old subscription;
+    try { if (sysCall.$) { sysCall.$.unsubscribe(); } } catch(e) { }
+    
+    // make call
+    sysCall.$ = this._http.get(
+      urljoin(apiUrl.url, sysCall.url),
       // { headers: new HttpHeaders({ timeout: `${25000}` }) }
     ).
     subscribe(data => {

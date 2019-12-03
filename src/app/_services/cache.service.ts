@@ -1,6 +1,6 @@
 import { Injectable, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
 import { StorageService } from './storage.service';
 
@@ -24,10 +24,13 @@ export class CacheService {
   public canGoBack: boolean = false;
   public routerEvents$: Subscription;
 
-  public apiUrl: any = {
-    'local': '/api/',
-    // 'pi': 'http://192.168.126.56/api/'
-  }
+  public apiDevice: string = 'local';
+  public apiDevice$: BehaviorSubject<string> = new BehaviorSubject<string>(this.apiDevice);
+  public apiUrls: any = [
+    { device: 'local', url: '/api/' },
+    { device: '192.168.126.56', url: 'http://192.168.126.56/api/' }
+  ];
+
 
   constructor(
     private _storage: StorageService
@@ -74,8 +77,11 @@ export class CacheService {
   public saveSettings() {
     return this._storage.set('sdob419', this.settings);
   }
-
-
+  
+  public setApi(device = 'local') {
+    this.apiDevice = device;
+    this.apiDevice$.next(this.apiDevice);
+  }
 }
 
 export function CacheServiceFactory(provider: CacheService) {
