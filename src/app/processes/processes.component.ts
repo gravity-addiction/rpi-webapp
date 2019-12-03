@@ -16,7 +16,7 @@ export class ProcessesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.processList$ = this.sysInfoService.getSysCall('processInfo');
+    this.processList$ = this.sysInfoService.getSysCall('processInfo', 'local');
   }
 
   sort(sortBy) {

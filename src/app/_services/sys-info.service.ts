@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { CacheService } from './cache.service';
+import * as urljoin from 'url-join';
 
 @Injectable({
   providedIn: 'root'
@@ -11,32 +12,37 @@ export class SysInfoService {
   private _sysCalls = {
     staticInfo: {
       init: false,
-      url: '/api/sysinfo/static',
+      url: '/sysinfo/static',
+      sub: new BehaviorSubject<any>(null)
+    },
+    os: {
+      init: false,
+      url: '/sysinfo/os',
       sub: new BehaviorSubject<any>(null)
     },
     networkInfo: {
       init: false,
-      url: '/api/sysinfo/network',
+      url: '/sysinfo/network',
       sub: new BehaviorSubject<any>(null)
     },    
     cpuInfo: {
       init: false,
-      url: '/api/sysinfo/cpu',
+      url: '/sysinfo/cpu',
       sub: new BehaviorSubject<any>(null)
     },
     memInfo: {
       init: false,
-      url: '/api/sysinfo/memory',
+      url: '/sysinfo/memory',
       sub: new BehaviorSubject<any>(null)
     },
     diskInfo: {
       init: false,
-      url: '/api/sysinfo/disk',
+      url: '/sysinfo/disk',
       sub: new BehaviorSubject<any>(null)
     },
     processInfo: {
       init: false,
-      url: '/api/sysinfo/processes',
+      url: '/sysinfo/processes',
       sub: new BehaviorSubject<any>(null),
       sortField: 'pmem',
       sort: (data) => {
@@ -51,13 +57,14 @@ export class SysInfoService {
   };
 
   constructor(
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _cacheService: CacheService
   ) { }
 
 
-  public getSysCall(syscall) {
+  public getSysCall(syscall, host = 'local') {
     if (!this._sysCalls.hasOwnProperty(syscall)) { return of(null); }
-    if (!this._sysCalls[syscall].init) { this.refreshSysCall(syscall); }
+    if (!this._sysCalls[syscall].init) { this.refreshSysCall(syscall, host); }
     return this._sysCalls[syscall].sub;
   }
 
@@ -69,10 +76,19 @@ export class SysInfoService {
     }
   }
 
-  public refreshSysCall(syscall) {
+  public refreshSysCall(syscall, host = 'local') {
+    if (!this._cacheService.apiUrl.hasOwnProperty(host)) {
+      console.log('No Host Defined For', host, 'in apiUrls Cache Service');
+      return;
+    }
     const sysCall = this._sysCalls[syscall];
     sysCall.init = true;
-    this._http.get(sysCall.url).subscribe(data => {
+
+    this._http.get(
+      urljoin(this._cacheService.apiUrl[host], sysCall.url),
+      // { headers: new HttpHeaders({ timeout: `${25000}` }) }
+    ).
+    subscribe(data => {
       if (sysCall.hasOwnProperty('sort')) {
         sysCall.sort(data);
       } else {

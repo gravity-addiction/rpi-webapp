@@ -15,8 +15,20 @@ router.get('/api/sysinfo/static', (req: Request, res: Response) => {
   ]).then(data => {
     res.status(200).json({
       system: data[0],
-      cpi: data[1],
+      cpu: data[1],
       cpuFlags: data[2]
+    });
+  }).catch(error => console.error(error));
+});
+
+router.get('/api/sysinfo/os', (req: Request, res: Response) => {
+  Promise.all([
+    si.osInfo(),
+    si.versions(),
+  ]).then(data => {
+    res.status(200).json({
+      osInfo: data[0],
+      version: data[1]
     });
   }).catch(error => console.error(error));
 });

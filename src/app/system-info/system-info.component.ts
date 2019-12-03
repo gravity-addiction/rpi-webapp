@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import * as Chartist from 'chartist';
 import { Subscription, ObjectUnsubscribedError } from 'rxjs';
 
 import { SysInfoService } from '../_services/sys-info.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-system-info',
+  templateUrl: './system-info.component.html',
+  styleUrls: ['./system-info.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class SystemInfoComponent implements OnInit {
   sysInfo: any = {};
 
   constructor(
@@ -22,6 +21,7 @@ export class DashboardComponent implements OnInit {
     this.sysInfo.memory$ = this.sysInfoService.getSysCall('memInfo', 'local');
     this.sysInfo.disk$ = this.sysInfoService.getSysCall('diskInfo', 'local');
     this.sysInfo.network$ = this.sysInfoService.getSysCall('networkInfo', 'local');
+    this.sysInfo.os$ = this.sysInfoService.getSysCall('os', 'local');
   }
 
 }
