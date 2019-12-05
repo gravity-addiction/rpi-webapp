@@ -13,9 +13,8 @@
 =========================================================
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
 */
- @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+ @import "./webapp-theme.css";
 
  @import "core/variables";
  @import "core/mixins";
@@ -49,11 +48,11 @@
 @import "core/cards/card-profile";
 @import "core/cards/card-plain";
 
- //plugin scss
- @import "core/plugins/animate";
- @import "core/plugins/chartist";
- @import "core/plugins/perfect-scrollbar";
+//plugin scss
+@import "core/plugins/animate";
+@import "core/plugins/chartist";
+@import "core/plugins/perfect-scrollbar";
 
- @import "core/responsive";
+@import "core/responsive";
 
 @import "core/angular-modal.scss";
