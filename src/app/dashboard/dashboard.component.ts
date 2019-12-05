@@ -1,10 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
-import * as Chartist from 'chartist';
-import { Subscription, ObjectUnsubscribedError } from 'rxjs';
+import { Subscription } from 'rxjs';
 
-import { SysInfoService } from '../_services/sys-info.service';
-import { CacheService } from '../_services/cache.service';
-import { share, tap } from 'rxjs/operators';
+import { SysInfoService } from 'modules/sysinfo/app/_services/sys-info.service';
+import { CacheService } from 'app/_services/cache.service';
 
 @Component({
   selector: 'app-dashboard',

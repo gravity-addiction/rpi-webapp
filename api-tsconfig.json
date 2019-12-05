@@ -7,8 +7,12 @@
     "experimentalDecorators": true
   },
   "exclude": [
-    "node_modules"
-  ],  
+    "node_modules",
+    "e2e",
+    "typings",
+    "*",
+    "**/app"
+  ],
   "compileOnSave": false,
   "buildOnSave": false,
   "atom": {

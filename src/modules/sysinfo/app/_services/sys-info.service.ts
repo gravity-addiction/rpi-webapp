@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, of, Subscription } from 'rxjs';
-import { CacheService } from './cache.service';
 import * as urljoin from 'url-join';
+
+import { CacheService } from 'app/_services/cache.service';
 
 @Injectable({
   providedIn: 'root'
@@ -62,13 +63,11 @@ export class SysInfoService {
     
   };
 
-  private apiDevice$: Subscription;
-
   constructor(
     private _http: HttpClient,
     private _cacheService: CacheService
   ) {
-    this.apiDevice$ = this._cacheService.apiDevice$.subscribe(() => {
+    this._cacheService.apiDevice$.subscribe(() => {
       const sysKeys = Object.keys(this._sysCalls),
             sysI = sysKeys.length;
 

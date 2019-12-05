@@ -41,10 +41,12 @@ console.log('Is Test: ', (isTest)?'Yes':'No');
 console.log('Is Production: ', (isProd)?'Yes':'No');
 
 module.exports = function makeWebpackConfig() {
-  const _assetsDir = args.assets || dotenv.CLI_ASSETS || path.dirname(process.argv[2]) || null,
+  const _assetsDir = args.assets || dotenv.CLI_ASSETS || null,
         _splitChunks = args.splitchunks || dotenv.SPLITCHUNKS || false,
-        _tsConfigCli = `./api/tsconfig-api.json`,
-        _atlOptions = `configFileName=${_tsConfigCli}&`;
+        _tsConfigCli = `./api-tsconfig.json`,
+        _atlOptions = JSON.stringify({
+          configFileName: _tsConfigCli
+        });
 
   console.log('TSConfig File: ', _tsConfigCli);
   console.log('Assets Dir: ', _assetsDir);
@@ -60,8 +62,9 @@ module.exports = function makeWebpackConfig() {
   };
 
   config.resolve = {
-    extensions: [ '.ts', '.js', '.json' ]
+    extensions: [ '.ts', '.tsx', '.js', '.json' ],
   };
+
   /**
    * Devtool
    * Reference: http://webpack.github.io/docs/configuration.html#devtool
@@ -85,7 +88,7 @@ module.exports = function makeWebpackConfig() {
   config.module = {
     rules: [
       {
-        test: /\.ts$/,
+        test: /\.tsx?$/,
         loader: `awesome-typescript-loader?${_atlOptions}`,
         exclude: [isTest ? /\.(e2e)\.ts$/ : /\.(spec|e2e)\.ts$/, /node_modules\/(?!(ng2-.+))/]
       },
@@ -97,7 +100,7 @@ module.exports = function makeWebpackConfig() {
         loader: 'tslint-loader',
         exclude: /node_modules/,
         options: {
-          configFile: `./tslint.json`
+          configFile: `./api-tslint.json`
         }
       }      
     ]
@@ -154,6 +157,14 @@ module.exports = function makeWebpackConfig() {
       }], { ignore: ['*.ts', '*.json']})
     );
   }
+
+  // Environment Files (.env)
+  config.plugins.push(
+    new CopyWebpackPlugin([{
+      context: 'src/',
+      from: { glob: '**/.env', dot: true }
+    }])
+  );
 
   if (isProd) {
     config.plugins.push(

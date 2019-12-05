@@ -1,7 +1,6 @@
 'use strict';
 import * as express from 'express';
-import { API, APIConfig } from '../../api';
-import { IAPISettings } from '../../api/models/i-api-settings';
+import { API, APIConfig, IAPISettings } from './api-ctrl';
 
 const apiSettings: Partial<IAPISettings> = {
   http_port: 6193,
@@ -27,16 +26,6 @@ const apiSettings: Partial<IAPISettings> = {
   }
 };
 
-console.log(process.env.JWT_SECRET);
-// Define Routes for API
-import * as SysinfoRoutes from './routes/sysinfo';
-
-// Add Route pointers to array for later looping
-const routes = [
-  SysinfoRoutes,
-];
-
-
 // Initialize ExpressJS as app
 const app = express();
 
@@ -44,16 +33,27 @@ const app = express();
 // apiDotSettings is the updated config version that includes info from .env
 const apiDotSettings = APIConfig(app, apiSettings);
 
-// configure routes, looping predefined routes array
-routes.map(r => app.use(r));
+
+
+// import modules
+import * as SysinfoRoutes from './src/modules/sysinfo/api';
+app.use(SysinfoRoutes);
+
+import * as SpotifyModule from './src/modules/spotify/api';
+app.use(SpotifyModule);
+
+
+
 
 // serve static files from app_folder (default: ../web)
 app.get('*.*', express.static(apiDotSettings.app_folder, { maxAge: '1y' }));
 
 // server any application path from app_folder (default: ../web)
 app.all('*', function (req: express.Request, res: express.Response) {
+  console.log(req.url, req.method);
   res.status(200).sendFile(`/`, {root: apiDotSettings.app_folder});
 });
+
 
 // Setup API Listener
 API(app, apiDotSettings);

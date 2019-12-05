@@ -9,10 +9,7 @@
   "exclude": [
     "test.ts",
     "**/*.spec.ts",
-    "db/*",
-    "api/*",
-    "cron/*",
-    "core/fake-backend.ts",
-    "scripts/*"    
+    "modules/**/api",
+    "api-*"  
   ]
 }

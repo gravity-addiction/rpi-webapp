@@ -12,12 +12,7 @@ import { AppComponent } from './app.component';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
-import { ByteconvertModule } from './_pipes/byteconvert.pipe';
-import { KeyvalueModule } from './_pipes/keyvalue.pipe';
-
 import { AppInterceptor } from './app.interceptor';
-import { AuthGuardLoggedIn } from './_guards/auth-guard-logged-in';
-import { AuthGuardLoggedOut } from './_guards/auth-guard-logged-out';
 
 import { CacheService, CacheServiceFactory } from './_services/cache.service';
 
@@ -31,18 +26,13 @@ import { DEFAULT_TIMEOUT } from './app.interceptor';
     HttpClientModule,
     ComponentsModule,
     RouterModule,
-    AppRoutingModule,
-
-    ByteconvertModule,
-    KeyvalueModule
+    AppRoutingModule
   ],
   declarations: [
     AppComponent,
     AdminLayoutComponent
   ],
   providers: [
-    AuthGuardLoggedIn,
-    AuthGuardLoggedOut,
     CookieService,
     [
       { provide: APP_INITIALIZER, useFactory: CacheServiceFactory, deps: [CacheService], multi: true },

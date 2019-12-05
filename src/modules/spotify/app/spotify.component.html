@@ -1,0 +1,97 @@
+<div class="main-content">
+  <div class="container-fluid">
+
+    <div class="row">
+      <div class="col"><i class="material-icons">play_arrow</i></div>
+      <div class="col"><i class="material-icons">play_arrow</i></div>
+      <div class="col"><i class="material-icons">play_arrow</i></div>
+      <div class="col"><i class="material-icons">play_arrow</i></div>
+      <div class="col"><i class="material-icons">play_arrow</i></div>
+      <div class="col"><i class="material-icons">play_arrow</i></div>
+    </div>
+
+    <div class="row">
+        
+      <div class="col-lg-6 col-md-12">
+        <div class="card">
+          <div class="card-header card-header-tabs card-header-primary">
+            <div class="nav-tabs-navigation">
+              <div class="nav-tabs-wrapper">
+                <span class="nav-tabs-title">Playlists</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="profile">
+                <table class="table">
+                  <tbody>
+
+                    <tr *ngFor="let item of (spotifyInfo.playlist$ | async)?.items">
+                      <td>{{ item.name }}</td>
+                      <td class="td-actions text-right">
+                        <button (click)="PlayPlaylist(item);" mat-raised-button type="button" matTooltip="Play" [matTooltipPosition]="'above'" class="btn btn-success btn-link btn-sm btn-just-icon">
+                          <i class="material-icons">play_arrow</i>
+                        </button>
+                        <button (click)="ViewPlaylist(item);" mat-raised-button type="button" matTooltip="View" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">
+                          <i class="material-icons">search</i>
+                        </button>                           
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-6 col-md-12">
+        <div class="card">
+          <div class="card-header card-header-tabs card-header-primary">
+            <div class="nav-tabs-navigation">
+              <div class="nav-tabs-wrapper">
+                <span class="nav-tabs-title">Songs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body">
+            <div class="tab-content">
+              <div class="tab-pane active" id="profile">
+                <table class="table">
+                  <tbody>
+
+                    <tr *ngFor="let item of (spotifyInfo.songs$ | async)?.items">
+                      <td>{{ item.track.name }}</td>
+                      <td class="td-actions text-right">
+                        <button (click)="PlayTrack(item.track);" mat-raised-button type="button" matTooltip="Play" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">
+                          <i class="material-icons">play_arrow</i>
+                        </button>                      
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>      
+
+    </div>
+  </div>
+
+  <a href="javascript:void(0);" *ngIf="!show_key_entry" (click)="show_key_entry = true">Set Dev Keys</a>
+  <div class="row" *ngIf="show_key_entry">
+    <div class="col-12 col-sm-4">Client ID: <input type="text" #spotify_client_id /></div>
+    <div class="col-12 col-sm-4">Client Secret: <input type="text" #spotify_client_secret /></div>
+    <div class="col-12 col-sm-2"><button type="button" (click)="saveDevKeys(spotify_client_id.value, spotify_client_secret.value)">Save Keys</button></div>
+  </div>
+</div>

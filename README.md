@@ -33,7 +33,7 @@ pm2 update
 cd ~/dev/
 git clone path-to-repo/webapp.git
 cd webapp/api
-yarn add jsonwebtoken https://github.com/strictd/easy-rbac.git bcryptjs shortid32 class-transformer unirest url-join perfect-scrollbar cors cookie-parser systeminformation
+yarn add jsonwebtoken https://github.com/strictd/easy-rbac.git bcryptjs shortid class-transformer unirest url-join perfect-scrollbar cors cookie-parser systeminformation
 
 ```
 
@@ -74,5 +74,10 @@ pm2 stop webapp
 pm2 save
 
 ```
+
+
+## Spotify Integration
+
+### Authorization
 
 

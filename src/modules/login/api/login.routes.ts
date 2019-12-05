@@ -1,8 +1,8 @@
 'use strict';
 
 import { Router, Request, Response } from 'express';
-import * as Login from '../controllers/login';
-import * as Tokens from '../controllers/tokens-jwt-simple';
+import * as Login from './login.controller';
+import * as Tokens from './tokens-jwt-simple.controller';
 
 const router = Router();
 

@@ -8,14 +8,17 @@ import { MatButtonModule, MatInputModule, MatRippleModule, MatFormFieldModule, M
 import { AdminLayoutRoutes } from './admin-layout.routing';
 
 // Components
-import { DashboardComponent } from '../../dashboard/dashboard.component';
-import { NotificationsComponent } from '../../notifications/notifications.component';
-import { ProcessesComponent } from '../../processes/processes.component';
-import { SystemInfoComponent } from '../../system-info/system-info.component';
+import { DashboardComponent } from 'app/dashboard/dashboard.component';
+import { NotificationsComponent } from 'app/notifications/notifications.component';
 
 // Pipes
-import { ByteconvertModule } from '../../_pipes/byteconvert.pipe';
-import { KeyvalueModule } from '../../_pipes/keyvalue.pipe';
+import { ByteconvertModule } from 'app/_pipes/byteconvert.pipe';
+import { KeyvalueModule } from 'app/_pipes/keyvalue.pipe';
+
+// Modules
+import { LoginModule } from 'modules/login/app';
+import { SpotifyModule } from 'modules/spotify/app';
+import { SysinfoModule } from 'modules/sysinfo/app';
 
 @NgModule({
   imports: [
@@ -31,13 +34,15 @@ import { KeyvalueModule } from '../../_pipes/keyvalue.pipe';
     MatTooltipModule,
 
     ByteconvertModule,
-    KeyvalueModule
+    KeyvalueModule,
+
+    LoginModule,
+    SpotifyModule,
+    SysinfoModule
   ],
   declarations: [
     DashboardComponent,
-    NotificationsComponent,
-    ProcessesComponent,
-    SystemInfoComponent
+    NotificationsComponent
   ]
 })
 

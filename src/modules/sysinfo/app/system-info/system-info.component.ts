@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Subscription, ObjectUnsubscribedError } from 'rxjs';
+import { Subscription } from 'rxjs';
+
+import { CacheService } from 'app/_services/cache.service';
 
 import { SysInfoService } from '../_services/sys-info.service';
-import { CacheService } from '../_services/cache.service';
+
 
 @Component({
   selector: 'app-system-info',

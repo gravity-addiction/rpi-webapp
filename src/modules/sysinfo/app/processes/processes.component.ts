@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { CacheService } from 'app/_services/cache.service';
+
 import { SysInfoService } from '../_services/sys-info.service';
-import { CacheService } from '../_services/cache.service';
 
 @Component({
   selector: 'app-processes',
