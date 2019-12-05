@@ -1,17 +1,44 @@
 <div class="main-content">
   <div class="container-fluid">
-
+    <div>
+      <label for="playerRange">Player: {{ (spotifyInfo.player$ | async)?.device?.name }} playing on {{ (spotifyInfo.player$ | async)?.device?.type }} at Volume {{ (spotifyInfo.player$ | async)?.device?.volume_percent }}</label>
+    </div>
+    <div>
+      <mat-slider #playerRange id="playerRange" style="width: 100%;"  type="range" 
+          min="0" [max]="(spotifyInfo.player$ | async)?.item?.duration_ms" 
+          (change)="movePlayer(playerRange.value)"
+          [ngModel]="player_progress_ms" class="playerProgressSlider"
+      ></mat-slider>
+    </div>
     <div class="row">
-      <div class="col"><i class="material-icons">play_arrow</i></div>
-      <div class="col"><i class="material-icons">play_arrow</i></div>
-      <div class="col"><i class="material-icons">play_arrow</i></div>
-      <div class="col"><i class="material-icons">play_arrow</i></div>
-      <div class="col"><i class="material-icons">play_arrow</i></div>
-      <div class="col"><i class="material-icons">play_arrow</i></div>
+      <div class="col text-center">
+        <button type="button" class="btn btn-lg btn-success" (click)="player('previous')">
+          <i class="material-icons">skip_previous</i>
+        </button>
+      </div>
+      <div class="col text-center">
+        <button type="button" class="btn btn-lg btn-success" (click)="player('play')">
+          <i class="material-icons">play_arrow</i>
+        </button>
+      </div>
+      <div class="col text-center">
+        <button type="button" class="btn btn-lg btn-success" (click)="player('pause')">
+          <i class="material-icons">pause</i>
+        </button>
+      </div>    
+      <div class="col text-center">
+        <button type="button" class="btn btn-lg btn-success" (click)="player('next')">
+          <i class="material-icons">skip_next</i>
+        </button>
+      </div>
+      <div class="col text-center">
+        <button type="button" class="btn btn-lg btn-success">
+          <i class="material-icons">volume_mute</i>
+        </button>
+      </div>
     </div>
 
     <div class="row">
-        
       <div class="col-lg-6 col-md-12">
         <div class="card">
           <div class="card-header card-header-tabs card-header-primary">
@@ -28,7 +55,7 @@
                 <table class="table">
                   <tbody>
 
-                    <tr *ngFor="let item of (spotifyInfo.playlist$ | async)?.items">
+                    <tr [id]="item.uri" [ngClass]="{'selected': item.uri === playing_uri}" *ngFor="let item of (spotifyInfo.playlist$ | async)?.items">
                       <td>{{ item.name }}</td>
                       <td class="td-actions text-right">
                         <button (click)="PlayPlaylist(item);" mat-raised-button type="button" matTooltip="Play" [matTooltipPosition]="'above'" class="btn btn-success btn-link btn-sm btn-just-icon">
@@ -66,7 +93,7 @@
                 <table class="table">
                   <tbody>
 
-                    <tr *ngFor="let item of (spotifyInfo.songs$ | async)?.items">
+                    <tr [id]="item.track.uri" [ngClass]="{'selected': item.track.uri === playing_uri}" *ngFor="let item of (spotifyInfo.songs$ | async)?.items">
                       <td>{{ item.track.name }}</td>
                       <td class="td-actions text-right">
                         <button (click)="PlayTrack(item.track);" mat-raised-button type="button" matTooltip="Play" [matTooltipPosition]="'above'" class="btn btn-primary btn-link btn-sm btn-just-icon">

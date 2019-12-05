@@ -285,13 +285,12 @@ export async function createDBTables() {
     );
   `);
 
-  await DB.knex.raw(`
+  return DB.knex.raw(`
     CREATE TABLE IF NOT EXISTS "spotify_keys" (
       "id" INTEGER PRIMARY KEY AUTOINCREMENT,
       "spotify_client_id" TEXT,
       "spotify_client_secret" TEXT
     );
   `);
-  return;
 }
 

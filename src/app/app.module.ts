@@ -3,6 +3,8 @@ import { NgModule, APP_INITIALIZER, InjectionToken } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { MatButtonModule, MatInputModule, MatRippleModule, MatFormFieldModule, MatSliderModule, MatTooltipModule, MatSelectModule } from '@angular/material';
+
 import { CookieService } from 'ngx-cookie-service';
 
 import { AppRoutingModule } from './app.routing';
@@ -26,7 +28,15 @@ import { DEFAULT_TIMEOUT } from './app.interceptor';
     HttpClientModule,
     ComponentsModule,
     RouterModule,
-    AppRoutingModule
+    AppRoutingModule,
+
+    MatButtonModule,
+    MatRippleModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSliderModule,
+    MatTooltipModule,
   ],
   declarations: [
     AppComponent,

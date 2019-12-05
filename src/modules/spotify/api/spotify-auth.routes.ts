@@ -11,7 +11,7 @@ router.put('/api/spotify/developer_keys', async (req: Request, res: Response) =>
         client_id = body.client_id || '',
         client_secret = body.client_secret || '';
 
-  SpotifyAuthCtrl.createDBTables();
+  await SpotifyAuthCtrl.createDBTables();
 
   SpotifyAuthCtrl.saveKeys(client_id, client_secret).then(tokenResp => {
     res.status(201).json(tokenResp);
@@ -24,7 +24,7 @@ router.put('/api/spotify/developer_keys', async (req: Request, res: Response) =>
 
 router.get('/api/spotify/auth', async (req: Request, res: Response) => {
   // Check DB Tables are created
-  SpotifyAuthCtrl.createDBTables();
+  await SpotifyAuthCtrl.createDBTables();
 
   // Initialize Auth record, create URL
   const spotify_authorize_url = SpotifyAuthCtrl.initAuthUrl(urljoin(req.protocol + '://' + req.headers.host));

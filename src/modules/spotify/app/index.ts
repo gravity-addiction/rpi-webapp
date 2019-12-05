@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatInputModule, MatRippleModule, MatFormFieldModule, MatTooltipModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatProgressBarModule, MatRippleModule, MatFormFieldModule, MatTooltipModule, MatSelectModule, MatSliderModule } from '@angular/material';
 
 // Components
 import { SpotifyComponent } from 'modules/spotify/app/spotify.component';
@@ -18,7 +18,9 @@ import { KeyvalueModule } from 'app/_pipes/keyvalue.pipe';
     MatRippleModule,
     MatFormFieldModule,
     MatInputModule,
+    MatProgressBarModule,
     MatSelectModule,
+    MatSliderModule,
     MatTooltipModule,
 
     KeyvalueModule

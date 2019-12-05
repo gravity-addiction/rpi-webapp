@@ -17,6 +17,7 @@ function makeSpotifyCall(callType: string, url: string, query: any, token: strin
       opts.body = body;
     }
 
+// console.log(callType, opts);
     request[callType.toLocaleLowerCase()](
       opts,
       (errMe, respMe, bodyMe) => {
@@ -41,7 +42,7 @@ export default async function(callType: string, url: string, query: any, body: a
   let authRecord = await SpotifyAuthCtrl.getAuth(state, uri).catch(err => console.log('Auth Error', err));
 
   // Refresh an Auth token expiring within the next two minutes
-  if (authRecord.token_expires < ((new Date().getTime()) - 120000)) {
+  if (authRecord.token_expires < ((new Date().getTime()) + 120000)) {
     authRecord = await SpotifyAuthCtrl.refreshAuthToken(authRecord.token_state_auth).catch(err => {
       return Promise.reject({status: 400, error: 'Token Renewal Required'});
     });

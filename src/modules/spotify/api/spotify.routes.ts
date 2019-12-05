@@ -11,7 +11,7 @@ router.all('/api/spotify/v1/:me*', async (req: Request, res: Response, next: Nex
         me = params.me || '',
         meStar = params[0] || '',
         query = req.query || {},
-        body = ((req.method || '').toLocaleLowerCase() === 'get') ? req.body : null;
+        body = ((req.method || '').toLocaleLowerCase() === 'get') ? null : req.body;
 
   SpotifyWrapper(req.method, urljoin('v1/', me, meStar), query, body).then((result: any) => {
     // Reply Status, Body

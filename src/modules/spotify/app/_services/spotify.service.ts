@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, of, Subscription } from 'rxjs';
+import { BehaviorSubject, of, Subscription, throwError } from 'rxjs';
 import * as urljoin from 'url-join';
 
 import { CacheService } from 'app/_services/cache.service';
@@ -19,6 +19,11 @@ export class SpotifyService {
     songs: {
       init: true,
       url: '/spotify/v1/playlists/{playlist_id}/tracks',
+      sub: new BehaviorSubject<any>(null)
+    },
+    player: {
+      init: true,
+      url: '/spotify/v1/me/player',
       sub: new BehaviorSubject<any>(null)
     },
   };
@@ -68,13 +73,10 @@ export class SpotifyService {
       return;
     }
 
-    const opts: any = {};
+    const opts: any = {
+      uris: ((Array.isArray(uris)) ? uris : [uris])
+    };
 
-    // Song URI
-    if (Array.isArray(uris)) {
-      opts.uris = uris;
-    } else { opts.uris = [uris]; }
-    
     return this._http.put(
       urljoin(apiUrl.url, '/spotify/v1/me/player/play') + '?device_id=' + encodeURIComponent(device),
       opts
@@ -94,6 +96,32 @@ export class SpotifyService {
     );
   }  
 
+  public playerAction(action, query: any = {}) {
+    const apiUrl = (this._cacheService.apiUrls || []).find((a) => a.device === this._cacheService.apiDevice);
+    if (!apiUrl) {
+      console.log('No Device Defined For', this._cacheService.apiDevice, 'in apiUrls Cache Service');
+      return;
+    }
+  
+    let method = 'put';
+    // Allowed player actions
+    if (['next', 'previous', 'play', 'pause', 'seek'].indexOf(action) === -1) { return throwError('Invalid Action'); }
+    
+    if (action === 'next' || action === 'prev') { method = 'post'; }
+
+    return this._http[method](
+      urljoin(apiUrl.url, '/spotify/v1/me/player/', action) + '?' +
+        Object.keys(query).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(query[k])).join('&'),
+      {}
+    );
+  }
+
+  public playerVolume(percent) {
+
+  }
+  public playerVolumeToggle() {
+
+  }
 
   public getSysCall(syscall) {
     if (!this._sysCalls.hasOwnProperty(syscall)) { return of(null); }

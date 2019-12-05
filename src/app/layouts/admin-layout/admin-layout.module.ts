@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatInputModule, MatRippleModule, MatFormFieldModule, MatTooltipModule, MatSelectModule } from '@angular/material';
+import { MatButtonModule, MatInputModule, MatRippleModule, MatFormFieldModule, MatSliderModule, MatTooltipModule, MatSelectModule } from '@angular/material';
 
 // Layout
 import { AdminLayoutRoutes } from './admin-layout.routing';
@@ -31,6 +31,7 @@ import { SysinfoModule } from 'modules/sysinfo/app';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatSliderModule,
     MatTooltipModule,
 
     ByteconvertModule,
