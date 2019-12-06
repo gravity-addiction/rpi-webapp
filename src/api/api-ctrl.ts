@@ -4,10 +4,12 @@ import * as bodyParser from 'body-parser';
 import { join } from 'path';
 import cors = require('cors');
 import { readFileSync } from 'fs';
-import { createServer as http_createServer } from 'http';
+import { createServer as http_createServer, Server } from 'http';
 import { createServer as https_createServer } from 'https';
 
 import minimist = require('minimist');
+
+import * as SocketIOModule from './api-socket-io';
 
 export class IAPISettings {
   http_server: boolean;
@@ -19,6 +21,8 @@ export class IAPISettings {
   https_port: number;
   https_key: string;
   https_cert: string;
+
+  use_socket_io: boolean;
 
   app_folder: string;
 
@@ -179,8 +183,12 @@ export function API(app: express.Application, settings?: Partial<IAPISettings>) 
   const args: any = minimist(process.argv);
 
   const http_server = parseBool(args.http_server || process.env.HTTP_SERVER || settings.http_server || true),
-        https_server = parseBool(args.https_server || process.env.HTTPS_SERVER || settings.https_server || false)
+        https_server = parseBool(args.https_server || process.env.HTTPS_SERVER || settings.https_server || false),
+        use_socket_io = parseBool(args.use_socket_io || process.env.USE_SOCKET_IO || settings.use_socket_io || true)
   ;
+
+  let sslserver: Server,
+      server: Server;
 
   // HTTPS Server
   if (https_server) {
@@ -196,7 +204,7 @@ export function API(app: express.Application, settings?: Partial<IAPISettings>) 
     app.set('sslip', sslIp);
 
     // Start SSL Server
-    const sslserver = https_createServer(sslCert, app);
+    sslserver = https_createServer(sslCert, app);
     sslserver.listen(sslPort, sslIp, () => {
       console.log('Created Listener on https://' + sslIp + ':' + sslPort);
     });
@@ -212,7 +220,7 @@ export function API(app: express.Application, settings?: Partial<IAPISettings>) 
     app.set('port', port);
     app.set('ip', ip);
 
-    const server = http_createServer(app);
+    server = http_createServer(app);
     server.listen(port, ip, () => {
       console.log('Created Listener on http://' + ip + ':' + port);
     });
@@ -222,6 +230,11 @@ export function API(app: express.Application, settings?: Partial<IAPISettings>) 
     server.on('error', (err) => onError(err, port));
     server.on('listening', () => onListening(server.address()));
 
+  }
+
+  // Socket-IO
+  if (use_socket_io) {
+    SocketIOModule.init(sslserver, server);
   }
 
   /* process.on('uncaughtException', function (exception) {
@@ -238,6 +251,8 @@ export function API(app: express.Application, settings?: Partial<IAPISettings>) 
   process.on('exit', () => {
     console.log('\nShutting Down..\n');
   });
+
+  return { sslserver: sslserver, server: server };
 }
 
 /**

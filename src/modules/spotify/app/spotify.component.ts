@@ -53,7 +53,7 @@ export class SpotifyComponent implements OnInit {
           if (this.player_progress_ms >= curPlaying.item.duration_ms) {
             this.player_progress_ms = curPlaying.item.duration_ms;
             try { clearInterval(this.playerInterval); } catch (e) { }
-            setTimeout(() => this.spotifyService.refreshSysCall('player', true), 500);
+            // setTimeout(() => this.spotifyService.refreshSysCall('player', true), 500);
           } else {
             this.player_progress_percent = (this.player_progress_ms / curPlaying.item.duration_ms) * 100;
           }
@@ -90,7 +90,7 @@ export class SpotifyComponent implements OnInit {
     try { this.playContext$.unsubscribe(); } catch (e) { }
     this.playContext$ = this.spotifyService.playcontext(item.uri, 'e9029b3eeccf4530a36b58286b7741b022c6a783').
     subscribe(data => {
-      this.spotifyService.refreshSysCall('player', true);
+      // this.spotifyService.refreshSysCall('player', true);
     });
     this.ViewPlaylist(item);
   }
@@ -105,7 +105,7 @@ export class SpotifyComponent implements OnInit {
     try { this.playTrack$.unsubscribe(); } catch (e) { }
     this.playTrack$ = this.spotifyService.playuri(track.uri, 'e9029b3eeccf4530a36b58286b7741b022c6a783').
     subscribe(data => {
-      this.spotifyService.refreshSysCall('player', true);
+      // this.spotifyService.refreshSysCall('player', true);
     });
   }
 
@@ -119,7 +119,7 @@ export class SpotifyComponent implements OnInit {
         position_ms: ms
     }).
     subscribe(data => {
-      setTimeout(() => this.spotifyService.refreshSysCall('player', true), 500);
+      // setTimeout(() => this.spotifyService.refreshSysCall('player', true), 500);
     }, err => {
       console.log('Player Action Error:', err)
     });
@@ -130,7 +130,7 @@ export class SpotifyComponent implements OnInit {
     
     this.playAction$ = this.spotifyService.playerAction(action, { device_id: 'e9029b3eeccf4530a36b58286b7741b022c6a783' }).
     subscribe(data => {
-      this.spotifyService.refreshSysCall('player', true);
+      // this.spotifyService.refreshSysCall('player', true);
     }, err => {
       console.log('Player Action Error:', err)
     });

@@ -28,21 +28,16 @@ const apiSettings: Partial<IAPISettings> = {
 
 // Initialize ExpressJS as app
 const app = express();
-
 // Preconfiguation of express app
 // apiDotSettings is the updated config version that includes info from .env
 const apiDotSettings = APIConfig(app, apiSettings);
 
-
-
 // import modules
-import * as SysinfoRoutes from './src/modules/sysinfo/api';
+import * as SysinfoRoutes from '../modules/sysinfo/api';
 app.use(SysinfoRoutes);
 
-import * as SpotifyModule from './src/modules/spotify/api';
+import * as SpotifyModule from '../modules/spotify/api';
 app.use(SpotifyModule);
-
-
 
 
 // serve static files from app_folder (default: ../web)
@@ -56,4 +51,4 @@ app.all('*', function (req: express.Request, res: express.Response) {
 
 
 // Setup API Listener
-API(app, apiDotSettings);
+const { sslserver, server } = API(app, apiDotSettings);

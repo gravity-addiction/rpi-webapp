@@ -4,6 +4,10 @@ import { Subscription, BehaviorSubject } from 'rxjs';
 
 import { StorageService } from './storage.service';
 
+import { Socket } from 'socket.io';
+
+declare const io: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,12 +35,16 @@ export class CacheService {
     { device: '192.168.126.56', url: 'http://192.168.126.56/api/' }
   ];
 
+  public apiSocket: Socket;
+
 
   constructor(
     private _storage: StorageService
   ) {
     this.onResize();
     this.settings = this.defaultSettings({});
+
+    this.apiSocket = io.connect();
   }
 
   public initRouterEvents(router: Router) {

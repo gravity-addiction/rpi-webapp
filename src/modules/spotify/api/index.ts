@@ -1,6 +1,6 @@
 'use strict';
 
-import { parseDotEnv } from '../../../../api-ctrl';
+import { parseDotEnv } from '../../../api/api-ctrl';
 import { join } from 'path';
 import * as express from 'express';
 const router = express.Router({ mergeParams: true });

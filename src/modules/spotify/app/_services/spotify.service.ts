@@ -43,6 +43,11 @@ export class SpotifyService {
       }
     });
 
+    // Watch Socket for spotify events
+    this._cacheService.apiSocket.on('spotify', (data: any) => {
+      this.refreshSysCall('player', true);
+    });
+
   }
 
   public saveDevKeys(client_id, client_secret) {
